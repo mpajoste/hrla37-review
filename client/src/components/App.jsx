@@ -1,11 +1,106 @@
 import React from 'react';
+import axios from 'axios';
+import Pokedex from './Pokedex.jsx';
 
-const App = () => (
-  <div>
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      pokedex: [],
+      poketype: '',
+      pokename: ''
+    }
+    this.getPokemon = this.getPokemon.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    this.getPokemonType = this.getPokemonType.bind(this);
+    this.handlePokeNameUpdate = this.handlePokeNameUpdate.bind(this);
+    this.updatePokeName = this.updatePokeName.bind(this);
+    this.deletePokemon = this.deletePokemon.bind(this);
+    }
+
+  // componentDidMount () {
+  //   this.getPokemon();
+  // }
+
+  getPokemon () {
+    axios
+      .get('/pokemon')
+      .then((data) => {
+        this.setState({
+          pokedex: data.data
+        })
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+      .then(()=> {
+        console.log(this.state)
+      })
+  }
+
+  getPokemonType (type) {
+    axios
+      .get(`/pokemon/${type}`)
+      .then((data) => {
+        this.setState({
+          pokedex: data.data
+        })
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+      .then(()=> {
+        console.log(this.state)
+      })
+  }
+
+
+  handleChange (e) {
+    this.setState({
+      poketype: e.target.value
+    })
+  }
+
+  handlePokeNameUpdate (e) {
+    this.setState ({
+      pokename: e.target.value
+    })
+  }
+
+
+  updatePokeName (id) {
+    axios
+    .put(`pokemon/${id}`, {
+      pokeName: this.state.pokename
+    })
+    .then(() => {
+      this.getPokemon();
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  }
+
+  deletePokemon(id) {
+    axios
+    .delete(`pokemon/${id}`)
+    .then(() => {
+      this.getPokemon()
+    })
+    .catch((err)=> {
+      console.error(err)
+    })
+  }
+
+
+
+  render() {
+    return (
+      <div>
     <div>
       <h1>Pokemon!</h1>
-      <button>Show All</button>
-      <select id="type">
+      <button onClick={this.getPokemon}>Show All</button>
+      <select id="type" onChange={this.handleChange}>
         <option>Sort by Type</option>
         <option>Grass</option>
         <option>Fire</option>
@@ -20,21 +115,13 @@ const App = () => (
         <option>Ghost</option>
         <option>Dragon</option>
       </select>
-      <button>INSERT</button>
-      <div>
-        <h3>Bulbasaur</h3>
-        <img src="http://vignette4.wikia.nocookie.net/nintendo/images/4/43/Bulbasaur.png/revision/latest?cb=20141002083518&path-prefix=en"/>
-      </div>
-      <div>
-        <h3>Ivysaur</h3>
-        <img src="http://vignette3.wikia.nocookie.net/nintendo/images/8/86/Ivysaur.png/revision/latest?cb=20141002083450&path-prefix=en"/>
-      </div>
-      <div>
-        <h3>Venusaur</h3>
-        <img src="http://vignette2.wikia.nocookie.net/nintendo/images/b/be/Venusaur.png/revision/latest?cb=20141002083423&path-prefix=en"/>
+      <button onClick={()=>this.getPokemonType(this.state.poketype)}>INSERT</button>
+      {this.state.pokedex.map((pokemon, index)=>( <Pokedex pokemon={pokemon} key={index} update={this.handlePokeNameUpdate} updatePokeName={this.updatePokeName} delete={this.deletePokemon} />))}
       </div>
     </div>
-  </div>
-)
+    )
+  }
+
+}
 
 export default App;
