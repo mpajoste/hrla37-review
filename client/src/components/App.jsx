@@ -13,7 +13,6 @@ class App extends React.Component {
     this.getPokemon = this.getPokemon.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getPokemonType = this.getPokemonType.bind(this);
-    this.handlePokeNameUpdate = this.handlePokeNameUpdate.bind(this);
     this.updatePokeName = this.updatePokeName.bind(this);
     this.deletePokemon = this.deletePokemon.bind(this);
     }
@@ -57,16 +56,9 @@ class App extends React.Component {
 
   handleChange (e) {
     this.setState({
-      poketype: e.target.value
+      [e.target.name]: e.target.value
     })
   }
-
-  handlePokeNameUpdate (e) {
-    this.setState ({
-      pokename: e.target.value
-    })
-  }
-
 
   updatePokeName (id) {
     axios
@@ -100,7 +92,7 @@ class App extends React.Component {
     <div>
       <h1>Pokemon!</h1>
       <button onClick={this.getPokemon}>Show All</button>
-      <select id="type" onChange={this.handleChange}>
+      <select id="type" name="poketype" onChange={this.handleChange}>
         <option>Sort by Type</option>
         <option>Grass</option>
         <option>Fire</option>
@@ -116,7 +108,7 @@ class App extends React.Component {
         <option>Dragon</option>
       </select>
       <button onClick={()=>this.getPokemonType(this.state.poketype)}>INSERT</button>
-      {this.state.pokedex.map((pokemon, index)=>( <Pokedex pokemon={pokemon} key={index} update={this.handlePokeNameUpdate} updatePokeName={this.updatePokeName} delete={this.deletePokemon} />))}
+      {this.state.pokedex.map((pokemon, index)=>( <Pokedex pokemon={pokemon} key={index} update={this.handleChange} pokename={this.state.pokename} updatePokeName={this.updatePokeName} delete={this.deletePokemon} />))}
       </div>
     </div>
     )

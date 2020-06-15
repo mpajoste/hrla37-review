@@ -21,7 +21,7 @@ class Pokedex extends React.Component {
     render() {
       return (
         <div className= "poke-profile">
-        <h3 onClick={this.toggleInput}>{this.state.showInput ?  <form><input onChange={this.props.update}></input><button type="submit" onClick={()=> this.props.updatePokeName(this.props.pokemon.id)}>Rename</button> </form>: (this.props.pokemon.pokeName) }</h3> 
+        <h3 onClick={this.toggleInput}>{this.state.showInput ?  <form><input name="pokename" onChange={this.props.update}></input><button type="submit" onClick={()=> this.props.updatePokeName(this.props.pokemon.id)}>Rename</button> </form>: (this.props.pokemon.pokeName) }</h3> 
           <img onClick={()=> {this.props.delete(this.props.pokemon.id)}}
           src={this.props.pokemon.pokeImg} />
         </div>
